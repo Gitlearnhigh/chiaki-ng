@@ -139,10 +139,12 @@ beach:
 	chiaki_mutex_unlock(&decoder->codec_mutex);
 }
 
-bool android_chiaki_video_decoder_video_sample(uint8_t *buf, size_t buf_size, void *user)
+bool android_chiaki_video_decoder_video_sample(uint8_t *buf, size_t buf_size, int32_t frames_lost, bool frame_recovered, void *user)
 {
 	bool r = true;
 	AndroidChiakiVideoDecoder *decoder = user;
+	(void)frames_lost;
+	(void)frame_recovered;
 	chiaki_mutex_lock(&decoder->codec_mutex);
 
 	if(!decoder->codec)

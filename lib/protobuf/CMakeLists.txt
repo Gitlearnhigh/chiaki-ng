@@ -11,10 +11,16 @@ add_custom_command(OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/takion.pb"
 set(SOURCE_FILES "${CMAKE_CURRENT_BINARY_DIR}/takion.pb.c")
 set(HEADER_FILES "${CMAKE_CURRENT_BINARY_DIR}/takion.pb.h")
 
-if(UNIX AND IS_ABSOLUTE "${PROTOC}")
+if(IS_ABSOLUTE "${PROTOC}")
 	# make sure protoc is in PATH when invoking the generator below, which needs it.
 	get_filename_component(PROTOC_PATH "${PROTOC}" DIRECTORY)
-	set(GEN_PREFIX "${CMAKE_COMMAND}" -E env "PATH=${PROTOC_PATH}:$ENV{PATH}")
+	if(CMAKE_HOST_WIN32)
+		set(GEN_PREFIX "")
+	else()
+		set(PROTOC_PATH_SEP ":")
+		set(PROTOC_ENV_PATH "$ENV{PATH}")
+		set(GEN_PREFIX "${CMAKE_COMMAND}" -E env "PATH=${PROTOC_PATH}${PROTOC_PATH_SEP}${PROTOC_ENV_PATH}")
+	endif()
 else()
 	set(GEN_PREFIX "")
 endif()
